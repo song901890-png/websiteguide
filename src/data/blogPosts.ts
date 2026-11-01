@@ -31,6 +31,8 @@ export interface BlogPost {
     anchorLabel?: string;
     href?: string;
   };
+
+
 }
 
 export interface NormalizedInternalLink {
@@ -68,6 +70,71 @@ export function normalizeInternalLink(
 }
 
 export const INITIAL_BLOG_POSTS: BlogPost[] = [
+ {
+    id: 'blog-6',
+    slug: 'ai-tools-official-sites-safe-use-guide',
+    date: '2026-11-01',
+    updatedDate: '2026-11-01',
+    category: 'AI 도구 가이드',
+    targetCategoryId: 'ai',
+    targetCategoryName: 'AI 도구',
+    targetCategorySlug: 'ai-tools',
+    title: `AI 도구 공식 사이트 구별법과 안전하게 쓰는 5가지 체크리스트`,
+    summary: `ChatGPT·Claude·Gemini 같은 AI 도구의 공식 주소 확인법, 가짜 설치 파일과 확장 프로그램을 피하는 방법, 대화 내용에 넣으면 안 되는 정보와 계정 보안 설정까지 한 번에 정리했습니다.`,
+    content: `AI 도구는 공식 주소(chatgpt.com, claude.ai, gemini.google.com 등)나 공식 앱 스토어로만 접속하고, "무료 설치판"이라는 PC 프로그램과 출처가 불분명한 브라우저 확장 프로그램은 설치하지 마세요. 대화창에는 주민등록번호·비밀번호·회사 기밀을 넣지 말고, 계정에는 2단계 인증을 켜 두는 것이 가장 기본적인 안전 수칙입니다.`,
+    readingTime: '4분 읽기',
+    charCount: 1900,
+    seoKeywords: ['AI도구공식사이트', 'ChatGPT공식주소', 'AI사칭사이트', 'AI개인정보보호', 'AI도구비교'],
+    internalLinkTop: {
+      text: `AI 도구를 처음 쓰거나 새 서비스를 찾을 때는 검색 광고보다 공식 주소 목록에서 바로 접속하는 것이 안전합니다. 주요 AI 서비스의 공식 주소는`,
+      anchor: '웹사이트가이드 분야별 공식 사이트 디렉터리',
+      url: '/'
+    },
+    sections: [
+      {
+        heading: `1. AI 도구를 사칭하는 사이트와 프로그램이 늘어나는 이유`,
+        paragraphs: [
+          `생성형 AI 서비스 이용자가 빠르게 늘면서, 유명 AI 이름을 앞세운 사칭 사이트도 함께 늘었습니다. 검색창에 "ChatGPT 무료", "AI 설치"처럼 입력하면 공식 서비스가 아닌 광고 페이지나 이름이 비슷한 사이트가 먼저 보이는 경우가 있습니다.`,
+          `대표적인 수법은 세 가지입니다. 첫째, 공식 서비스와 비슷한 화면을 만들어 로그인 정보를 입력받는 피싱 사이트입니다. 둘째, "PC용 무료 설치판"이라며 실행 파일을 내려받게 한 뒤 악성코드를 심는 방식입니다. 셋째, AI 기능을 준다는 브라우저 확장 프로그램이 방문 기록이나 입력 내용을 몰래 수집하는 경우입니다.`
+        ]
+      },
+      {
+        heading: `2. 주요 AI 도구 공식 주소와 접속 습관`,
+        paragraphs: [
+          `자주 쓰는 AI 서비스의 공식 주소는 다음과 같습니다. ChatGPT는 chatgpt.com, Claude는 claude.ai, Google Gemini는 gemini.google.com, Microsoft Copilot은 copilot.microsoft.com, Perplexity는 perplexity.ai, 네이버 클로바 X는 clova-x.naver.com입니다. 주소창의 도메인 철자를 한 번 확인하고, 처음 접속한 공식 주소를 즐겨찾기에 저장해 두면 이후 검색 광고를 거치지 않아도 됩니다.`,
+          `모바일 앱은 반드시 구글 플레이나 애플 앱 스토어에서 개발사 이름을 확인한 뒤 설치하세요. 앱 이름이 비슷해도 개발사가 OpenAI, Anthropic, Google, Microsoft 같은 공식 운영사가 아니라면 설치하지 않는 것이 좋습니다. PC용 데스크톱 앱이 필요하다면 각 서비스 공식 홈페이지의 다운로드 메뉴에서만 받으세요.`
+        ]
+      },
+      {
+        heading: `3. 대화창에 넣으면 안 되는 정보`,
+        paragraphs: [
+          `AI 서비스에 입력한 대화는 서비스 개선이나 안전 점검을 위해 일정 기간 저장될 수 있고, 서비스마다 저장 기간과 활용 범위가 다릅니다. 그래서 주민등록번호, 계좌·카드 번호, 비밀번호, 인증번호 같은 정보는 어떤 AI 서비스에도 입력하지 않는 것이 원칙입니다.`,
+          `회사 업무에 쓸 때는 고객 개인정보, 공개 전 실적, 계약서 원문처럼 외부로 나가면 안 되는 자료를 그대로 붙여 넣지 마세요. 이름과 숫자를 가린 뒤 질문하거나, 회사가 계약한 기업용 요금제와 사내 정책이 있는지 먼저 확인하는 것이 안전합니다. 대부분의 서비스는 설정 메뉴에서 대화 기록 보관과 학습 활용 여부를 바꿀 수 있으니 처음 가입할 때 한 번 살펴보세요.`
+        ]
+      },
+      {
+        heading: `4. 계정 보안과 결제 사기 예방 5가지 체크리스트`,
+        paragraphs: [
+          `첫째, 공식 주소나 공식 앱으로만 로그인합니다. 둘째, 계정에 2단계 인증을 켜 둡니다. 셋째, "계정이 정지됩니다", "결제 정보를 갱신하세요" 같은 메일 속 링크는 누르지 말고 앱이나 공식 사이트에 직접 접속해 확인합니다. 넷째, 유료 구독은 공식 사이트나 앱 스토어 결제로만 진행하고, 개인 간 "공유 계정 판매"나 "할인 결제 대행"은 이용하지 않습니다. 다섯째, 출처를 모르는 AI 확장 프로그램은 설치하지 말고, 이미 설치한 확장 프로그램은 권한 목록을 정기적으로 점검합니다.`,
+          `공유 계정이나 결제 대행은 계정 정지, 결제 사기, 대화 기록 노출로 이어질 수 있습니다. 비용이 부담된다면 각 서비스의 무료 플랜 범위를 먼저 비교하고, 꼭 필요한 도구 하나만 유료로 쓰는 편이 안전하고 경제적입니다.`
+        ]
+      },
+      {
+        heading: `5. 목적별로 AI 도구를 고르는 방법`,
+        paragraphs: [
+          `글쓰기와 긴 문서 요약, 코드 작성처럼 대화형 작업이 중심이라면 ChatGPT, Claude, Gemini 같은 범용 AI 어시스턴트를 먼저 비교해 보세요. 최신 정보를 출처와 함께 찾고 싶다면 Perplexity처럼 검색 결과를 인용해 주는 서비스가, 한국어 문서 작업에는 클로바 X나 뤼튼 같은 국내 서비스가 편할 수 있습니다.`,
+          `이미지·영상·음성 생성, 번역, 프레젠테이션 제작처럼 특정 작업이 목적이라면 해당 분야 전문 도구가 더 효율적입니다. 어떤 도구를 고르든 운영 회사, 데이터 처리 방침, 유료 전환 조건을 확인한 뒤 가입하는 것이 좋습니다. 서비스 기능과 요금은 자주 바뀌므로 결제 전에는 공식 사이트의 최신 안내를 다시 확인하세요.`
+        ]
+      }
+    ],
+    internalLinkBottom: {
+      text: `ChatGPT, Claude, Gemini, Perplexity 등 AI 도구 30곳의 공식 주소와 운영사, 무료·유료 범위는`,
+      anchor: 'AI 도구 공식 사이트 30곳',
+      url: '/category/ai-tools/'
+    }
+  },
+
+  
   {
     id: 'blog-1',
     slug: 'fake-shopping-mall-verification-5-steps',
