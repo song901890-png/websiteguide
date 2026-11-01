@@ -1,13 +1,14 @@
-   # Cloudflare Workers (정적 자산) 배포 설정
-   name = "websiteguide"
-   compatibility_date = "2026-10-31"
+# Cloudflare Workers (정적 자산) 배포 설정
+name = "websiteguide"
+compatibility_date = "2026-10-31"
+workers_dev = false
 
-   [assets]
-   directory = "./dist"
-   html_handling = "auto-trailing-slash"
-   not_found_handling = "404-page"
+[assets]
+directory = "./dist"
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"
 
-
+# 사용자 지정 도메인
 [[routes]]
 pattern = "www.websiteguide.io"
 custom_domain = true
@@ -15,5 +16,3 @@ custom_domain = true
 [[routes]]
 pattern = "websiteguide.io"
 custom_domain = true
-
-workers_dev = false
