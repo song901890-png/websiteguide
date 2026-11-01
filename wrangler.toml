@@ -6,3 +6,12 @@
    directory = "./dist"
    html_handling = "auto-trailing-slash"
    not_found_handling = "404-page"
+
+
+[[routes]]
+pattern = "www.websiteguide.io"
+custom_domain = true
+
+[[routes]]
+pattern = "websiteguide.io"
+custom_domain = true
