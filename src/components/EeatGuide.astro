@@ -1,0 +1,134 @@
+---
+// 개념 비교표 · 사이트 선정 기준 · 최신 칼럼 (모두 정적 HTML로 출력되어 검색엔진이 그대로 읽습니다)
+import { INITIAL_BLOG_POSTS } from '../data/blogPosts';
+import { SITE_NAME } from '../data/siteConfig';
+
+interface Props {
+  maxBlogCards?: number;
+}
+
+const { maxBlogCards = 3 } = Astro.props;
+
+const latestPosts = [...INITIAL_BLOG_POSTS]
+  .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+  .slice(0, maxBlogCards);
+
+const criteria = [
+  { step: '1', title: '운영 주체 확인', body: '정부·공공기관, 금융회사, 상장사, 널리 알려진 글로벌 서비스처럼 운영 주체가 공개된 공식 서비스만 등재합니다.' },
+  { step: '2', title: '공식 주소 대조', body: '운영사 공식 홈페이지·공식 앱·보도자료에 표기된 주소와 철자를 대조해 유사 철자 사칭 도메인을 걸러냅니다.' },
+  { step: '3', title: 'HTTPS 적용 확인', body: '등재 시점에 브라우저로 접속해 HTTPS 연결과 인증서 오류가 없는지 확인합니다.' },
+  { step: '4', title: '제외 대상', body: '불법 스트리밍, 저작권 침해, 도박, 성인, 악성코드 유포, 접속 차단 우회를 주목적으로 하는 사이트는 등재하지 않습니다.' },
+  { step: '5', title: '이용 조건 명시', body: '비회원 이용 가능 여부, 본인인증 필요 여부, 무료·유료 범위를 카드의 [정보 상세보기]에 적습니다.' },
+  { step: '6', title: '정정 정책', body: '주소 변경이나 오류 제보가 들어오면 공식 출처를 확인한 뒤 수정하고, 페이지의 최종 업데이트 날짜를 갱신합니다.' },
+];
+---
+<section id="section-guide" aria-labelledby="heading-comparison" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+
+  <div class="space-y-4">
+    <div class="border-b border-slate-200 pb-4">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Comparison</span>
+      <h2 id="heading-comparison" class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
+        주소 모음, 링크 모음, 사이트 안내, 개인 북마크는 무엇이 다를까
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+        비슷해 보이지만 목적이 다른 네 가지 웹사이트 정리 방식을 비교했습니다. {SITE_NAME}는 공식 주소와 이용 조건을 함께 안내하는 방식을 따릅니다.
+      </p>
+    </div>
+
+    <div class="overflow-x-auto bg-white rounded-2xl border border-slate-200 shadow-2xs">
+      <table class="w-full text-left border-collapse text-xs">
+        <caption class="sr-only">웹사이트 정리 방식 네 가지 비교</caption>
+        <thead>
+          <tr class="bg-slate-900 text-white">
+            <th scope="col" class="p-3.5 font-bold">구분</th>
+            <th scope="col" class="p-3.5 font-bold">핵심 목적</th>
+            <th scope="col" class="p-3.5 font-bold">정보 갱신 방식</th>
+            <th scope="col" class="p-3.5 font-bold">확인할 점</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 text-slate-700">
+          <tr>
+            <th scope="row" class="p-3.5 font-extrabold text-indigo-700">주소 모음</th>
+            <td class="p-3.5">서비스의 공식 도메인과 현재 접속 주소 확인</td>
+            <td class="p-3.5">운영자가 주소 변경을 확인해 수정</td>
+            <td class="p-3.5">등재 기준이 공개되어 있는지, 운영자 연락처가 있는지</td>
+          </tr>
+          <tr>
+            <th scope="row" class="p-3.5 font-extrabold text-indigo-700">링크 모음</th>
+            <td class="p-3.5">분야별로 여러 사이트를 연결하는 탐색 목록</td>
+            <td class="p-3.5">운영자 큐레이션으로 추가·삭제</td>
+            <td class="p-3.5">불법·사칭 사이트가 섞여 있지 않은지</td>
+          </tr>
+          <tr>
+            <th scope="row" class="p-3.5 font-extrabold text-indigo-700">사이트 안내</th>
+            <td class="p-3.5">이용 목적과 조건(가입·인증·비용·앱)을 비교 안내</td>
+            <td class="p-3.5">요금·정책 변경 시 편집자가 반영</td>
+            <td class="p-3.5">운영 주체와 이용 조건이 함께 적혀 있는지</td>
+          </tr>
+          <tr>
+            <th scope="row" class="p-3.5 font-extrabold text-slate-700">개인 북마크</th>
+            <td class="p-3.5">내가 자주 방문하는 사이트를 기기에 저장</td>
+            <td class="p-3.5">사용자가 직접 추가·삭제</td>
+            <td class="p-3.5">주소가 바뀌면 직접 고쳐야 함</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div class="border-b border-slate-200 pb-4">
+      <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Editorial Policy</span>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
+        {SITE_NAME} 사이트 선정 기준 6가지
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+        광고나 금전을 대가로 등재하지 않으며, 아래 기준을 통과한 공식 서비스만 소개합니다. <a href="/selection-criteria/" class="text-indigo-700 font-bold underline">선정 기준 자세히 보기</a>
+      </p>
+    </div>
+
+    <ol class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+      {criteria.map((c) => (
+        <li class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+          <h3 class="inline-block px-2.5 py-1 bg-indigo-50 text-indigo-700 font-extrabold rounded-md">{c.step}. {c.title}</h3>
+          <p class="mt-2.5 text-slate-600 leading-relaxed">{c.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div id="section-blog" class="space-y-4 pt-4">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-slate-200 pb-4">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Blog</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">최신 디지털 안전 칼럼</h2>
+      </div>
+      <a href="/blog/" class="text-xs font-bold text-indigo-600 hover:underline shrink-0">📚 칼럼 전체 보기 →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {latestPosts.map((post) => (
+        <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs hover:shadow-md hover:border-indigo-300 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold gap-2">
+              <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded font-bold">{post.category}</span>
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-700 font-bold">{post.readingTime}</span>
+                <span>·</span>
+                <time datetime={post.date}>{post.date}</time>
+              </div>
+            </div>
+            <h3 class="mt-3 text-sm sm:text-base font-extrabold text-slate-900 leading-snug">
+              <a href={`/blog/${post.slug}/`} class="hover:text-indigo-700">{post.title}</a>
+            </h3>
+            <p class="mt-2 text-xs text-slate-600 leading-relaxed line-clamp-3">{post.summary}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <a href={`/category/${post.targetCategorySlug}/`} class="text-slate-500 hover:text-indigo-600 font-semibold">📂 {post.targetCategoryName}</a>
+            <a href={`/blog/${post.slug}/`} class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold">칼럼 읽기 →</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

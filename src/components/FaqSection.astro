@@ -1,0 +1,116 @@
+---
+// 자주 묻는 질문 + 사이트 푸터
+import { FAQ_ITEMS, CATEGORIES } from '../data/sitesData';
+import { INITIAL_BLOG_POSTS } from '../data/blogPosts';
+import { CONTACT_EMAIL, TELEGRAM_URL, TELEGRAM_HANDLE } from '../data/siteConfig';
+
+interface Props {
+  hideFaq?: boolean;
+}
+
+const { hideFaq = false } = Astro.props;
+---
+{!hideFaq && (
+  <section id="section-faq" aria-labelledby="heading-faq" class="py-12 bg-slate-100 border-t border-slate-200 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+      <div class="text-center">
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">FAQ</span>
+        <h2 id="heading-faq" class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
+          자주 묻는 질문 (FAQ)
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          웹사이트가이드 이용과 안전한 웹사이트 접속에 관해 자주 묻는 질문입니다.
+        </p>
+      </div>
+
+      <div class="space-y-3" id="faq-accordion-container">
+        {FAQ_ITEMS.map((item, idx) => (
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs">
+            <button
+              type="button"
+              data-faq-btn={`faq-panel-${idx}`}
+              aria-expanded={idx === 0 ? "true" : "false"}
+              class="faq-toggle-btn w-full text-left p-4 sm:p-5 font-bold text-slate-900 flex items-center justify-between gap-4 text-xs sm:text-sm hover:bg-slate-50 transition-colors"
+            >
+              <span>Q{idx + 1}. {item.question}</span>
+              <span class="faq-arrow text-indigo-600 font-extrabold shrink-0">{idx === 0 ? '▲' : '▼'}</span>
+            </button>
+            <div
+              id={`faq-panel-${idx}`}
+              class={`px-4 sm:px-5 pb-4 sm:pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3 ${
+                idx === 0 ? '' : 'hidden'
+              }`}
+            >
+              {item.answer}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- 사이트 푸터 -->
+<footer class="bg-slate-950 text-slate-400 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-xs">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
+    <div class="space-y-2.5 md:col-span-3">
+      <a href="/" class="flex items-center space-x-2 text-white font-extrabold text-base hover:text-indigo-400 transition-colors">
+        <span>🛡️</span>
+        <span>웹사이트가이드 (WebsiteGuide)</span>
+      </a>
+      <p class="text-slate-400 leading-relaxed text-[11px]">
+        12개 분야 360곳 공식 웹사이트의 주소와 운영 주체, 이용 조건을 정리한 웹사이트 안내 가이드입니다. 광고·금전을 대가로 한 등재는 받지 않습니다.
+      </p>
+      <p class="text-[11px] text-slate-400">
+        문의·제보: <a href={`mailto:${CONTACT_EMAIL}`} class="text-slate-200 hover:underline">{CONTACT_EMAIL}</a> · <a href={TELEGRAM_URL} target="_blank" rel="noopener" class="text-slate-200 hover:underline">텔레그램 {TELEGRAM_HANDLE}</a>
+      </p>
+    </div>
+
+    <div class="space-y-2 md:col-span-4">
+      <h3 class="text-white font-bold">분야별 디렉터리</h3>
+      <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+        {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
+          <a
+            href={`/category/${cat.slug}/`}
+            data-footer-cat={cat.id}
+            class="footer-cat-link hover:text-white transition-colors truncate"
+          >
+            {cat.icon} {cat.name}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="space-y-2 md:col-span-3">
+      <h3 class="text-white font-bold">디지털 안전 칼럼</h3>
+      <ul class="space-y-1.5 text-[11px] text-slate-400">
+        {INITIAL_BLOG_POSTS.map((post) => (
+          <li class="truncate">
+            • <a href={`/blog/${post.slug}/`} class="hover:text-white transition-colors">{post.title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="space-y-2 md:col-span-2">
+      <h3 class="text-white font-bold">사이트 정보</h3>
+      <ul class="space-y-1.5 text-[11px] text-slate-400">
+        <li>• <a href="/about/" class="hover:text-white transition-colors">웹사이트가이드 소개</a></li>
+        <li>• <a href="/selection-criteria/" class="hover:text-white transition-colors">사이트 선정 기준</a></li>
+        <li>• <a href="/address-verification/" class="hover:text-white transition-colors">안전 접속 가이드</a></li>
+        <li>• <a href="/blog/" class="hover:text-white transition-colors">디지털 안전 블로그</a></li>
+        <li>• <a href="/faq/" class="hover:text-white transition-colors">자주 묻는 질문</a></li>
+        <li>• <a href="/internet-of-things/" class="hover:text-white transition-colors">사물인터넷(IoT) 기술 가이드</a></li>
+        <li>• <a href="/rss.xml" class="hover:text-white transition-colors">RSS 2.0 피드</a></li>
+        <li>• <a href="/sitemap-index.xml" class="hover:text-white transition-colors">XML 사이트맵</a></li>
+        <li>• <a href="/contact/" class="hover:text-white transition-colors">문의·정정 요청</a></li>
+        <li>• <a href="/privacy/" class="hover:text-white transition-colors">개인정보처리방침</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-slate-500 text-[11px]">
+    <p>© 2026 웹사이트가이드 (WebsiteGuide). All rights reserved.</p>
+    <a href="/privacy/" class="hover:text-slate-300 transition-colors">개인정보처리방침</a>
+  </div>
+</footer>

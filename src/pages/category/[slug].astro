@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RetentionBar from '../../components/RetentionBar.astro';
+import FaqSection from '../../components/FaqSection.astro';
+import { CATEGORIES, SITES_DATA } from '../../data/sitesData';
+import { INITIAL_BLOG_POSTS } from '../../data/blogPosts';
+import { DIRECTORY_UPDATED } from '../../data/siteConfig';
+
+export function getStaticPaths() {
+  return CATEGORIES.filter((c) => c.id !== 'all').map((cat) => ({
+    params: { slug: cat.slug },
+    props: { category: cat }
+  }));
+}
+
+const { category } = Astro.props;
+const allCategories = CATEGORIES.filter((c) => c.id !== 'all');
+const categorySites = SITES_DATA.filter((s) => s.category === category.id);
+const relatedPosts = INITIAL_BLOG_POSTS.filter(
+  (p) => p.targetCategorySlug === category.slug || p.targetCategoryId === category.id
+);
+const canonicalURL = `https://www.websiteguide.io/category/${category.slug}/`;
+const pageTitle = `${category.name} 공식 사이트 ${categorySites.length}곳 모음 — 주소·이용 조건 비교 | 웹사이트가이드`;
+const pageDesc = `${category.name} 분야 대표 공식 웹사이트 ${categorySites.length}곳의 주소와 운영 주체, 가입·본인인증 조건, 비용 정보를 한눈에 비교하고 공식 사이트로 바로 이동하세요.`;
+
+const categorySchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "웹사이트가이드 홈",
+          "item": "https://www.websiteguide.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": `${category.name} 공식 사이트 모음`,
+          "item": canonicalURL
+        }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": `${canonicalURL}#collection`,
+      "url": canonicalURL,
+      "name": pageTitle,
+      "description": pageDesc,
+      "inLanguage": "ko-KR",
+      "mainEntity": {
+        "@type": "ItemList",
+        "name": `${category.name} 공식 웹사이트 목록`,
+        "numberOfItems": categorySites.length,
+        "itemListElement": categorySites.map((site, idx) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "name": site.name,
+          "url": site.url,
+          "description": site.description
+        }))
+      }
+    }
+  ]
+};
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  canonicalURL={canonicalURL}
+  jsonLd={categorySchema}
+>
+  <RetentionBar />
+
+  <main class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="브레드크럼 내비게이션" class="text-xs text-slate-500 flex items-center space-x-2">
+      <a href="/" class="hover:text-indigo-600 font-bold">🏠 웹사이트가이드 홈</a>
+      <span>/</span>
+      <span class="text-slate-900 font-extrabold">{category.icon} {category.name}</span>
+    </nav>
+
+    <!-- Category Header -->
+    <header class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-3 py-1 bg-indigo-50 text-indigo-700 font-extrabold rounded-full text-xs">
+          {category.icon} {category.name} · {categorySites.length}곳
+        </span>
+        <span class="text-xs text-slate-500 font-semibold">
+          최종 업데이트: <time datetime={DIRECTORY_UPDATED}>{DIRECTORY_UPDATED}</time>
+        </span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+        {category.icon} {category.name} 공식 웹사이트 {categorySites.length}곳
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-4xl">
+        {pageDesc}
+      </p>
+
+      <!-- Category Switcher Navigation -->
+      <nav aria-label="다른 분야로 이동" class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-1.5">
+        <a
+          href="/"
+          class="px-3 py-1.5 rounded-xl text-xs font-bold border bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200 transition-colors"
+        >
+          🌐 전체 (홈)
+        </a>
+        {allCategories.map((cat) => (
+          <a
+            href={`/category/${cat.slug}/`}
+            aria-current={cat.slug === category.slug ? 'page' : undefined}
+            class={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${
+              cat.slug === category.slug
+                ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            {cat.icon} {cat.name}
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    
+    <section aria-label={`${category.name} 사이트 목록`} class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {categorySites.map((site) => (
+        <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs hover:shadow-md hover:border-indigo-300 transition-all flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2 py-0.5 text-[11px] font-bold rounded-md bg-indigo-50 text-indigo-700">
+                {site.categoryLabel}
+              </span>
+            </div>
+
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                <a href={site.url} target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 transition-colors">
+                  {site.name}
+                </a>
+                {site.hasApp && (
+                  <span class="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded font-semibold">📱 앱 지원</span>
+                )}
+              </h2>
+              <p class="text-[11px] text-slate-400 font-medium mt-0.5">
+                {site.operator}{site.foundedYear ? ` (${site.foundedYear})` : ''} · 초성 <code class="text-indigo-600 font-mono">{site.chosung}</code>
+              </p>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+              {site.description}
+            </p>
+
+            <div class="flex flex-wrap gap-1">
+              {site.tags.map((tag) => (
+                <span class="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-600 rounded font-medium">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-700 space-y-1">
+              <div>• <strong>운영 주체:</strong> {site.operator}{site.foundedYear ? ` (${site.foundedYear} 설립)` : ''}</div>
+              <div>• <strong>이용 비용:</strong> {site.isFree}</div>
+              <div>• <strong>본인인증 조건:</strong> {site.authRequired}</div>
+              <div>• <strong>비슷한 사이트:</strong> {site.altSites}</div>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="font-mono font-bold text-emerald-700 truncate">https://{site.domain}</span>
+            <a
+              href={site.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors shrink-0"
+            >
+              공식 사이트 이동 ↗
+            </a>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    
+    <section aria-label="분야별 관련 보안 가이드 칼럼" class="bg-slate-900 text-slate-200 rounded-3xl p-6 sm:p-8 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">관련 칼럼</span>
+          <h2 class="text-base sm:text-lg font-extrabold text-white mt-0.5">
+            🛡️ {category.name} 이용 시 함께 읽으면 좋은 칼럼
+          </h2>
+        </div>
+        <a href="/blog/" class="text-xs font-bold text-amber-300 hover:underline">전체 안전 칼럼 보기 →</a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {(relatedPosts.length > 0 ? relatedPosts : INITIAL_BLOG_POSTS.slice(0, 2)).map((post) => (
+          <a
+            href={`/blog/${post.slug}/`}
+            class="block p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-800 border border-slate-700 hover:border-indigo-400 transition-all space-y-1.5"
+          >
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span class="text-emerald-400 font-bold">{post.category}</span>
+              <span>{post.readingTime} · {post.date}</span>
+            </div>
+            <h3 class="text-xs sm:text-sm font-extrabold text-white">{post.title}</h3>
+            <p class="text-[11px] text-slate-300 leading-relaxed">{post.summary}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <FaqSection hideFaq={true} />
+</BaseLayout>

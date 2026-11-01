@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RetentionBar from '../components/RetentionBar.astro';
+import FaqSection from '../components/FaqSection.astro';
+import { SITE_URL, SITE_NAME, EDITOR_NAME, CONTACT_EMAIL, DIRECTORY_UPDATED } from '../data/siteConfig';
+
+const pageTitle = `사이트 선정 기준 및 정정 정책 | ${SITE_NAME}`;
+const pageDesc = `${SITE_NAME}가 공식 웹사이트를 선정하는 6가지 기준, 등재하지 않는 사이트 유형, 오류 정정 절차와 광고·제휴 정책을 안내합니다.`;
+const canonicalURL = `${SITE_URL}/selection-criteria/`;
+
+const criteria = [
+  { title: '운영 주체 확인', body: '정부·공공기관, 금융회사, 상장사, 널리 알려진 글로벌 서비스처럼 운영 주체가 공개된 서비스만 등재합니다. 운영사 이름은 각 카드의 [운영 주체]에 적습니다.' },
+  { title: '공식 주소 대조', body: '운영사 공식 홈페이지, 공식 앱 스토어 페이지, 보도자료에 표기된 주소와 철자를 대조합니다. 한 글자만 다른 유사 도메인(타이포스쿼팅)은 등재하지 않습니다.' },
+  { title: 'HTTPS 적용 확인', body: '등재 시점에 브라우저로 직접 접속해 HTTPS 연결과 인증서 경고가 없는지 확인합니다.' },
+  { title: '이용 조건 정리', body: '비회원 이용 가능 여부, 본인인증 필요 여부, 무료·유료 범위를 정리합니다. 요금은 수시로 바뀔 수 있으므로 결제 전에는 해당 공식 사이트에서 다시 확인하도록 안내합니다.' },
+  { title: '분야 균형', body: '12개 분야마다 국내 공공·대표 서비스와 해외 주요 서비스를 함께 소개해, 이용자가 목적에 맞는 대안을 비교할 수 있게 합니다.' },
+  { title: '정기 점검과 정정', body: '편집팀이 정기적으로 주소와 이용 조건을 다시 확인하고, 제보가 들어오면 공식 출처를 확인한 뒤 수정합니다. 수정한 페이지에는 최종 업데이트 날짜를 표시합니다.' },
+];
+
+const excluded = [
+  '저작권이 있는 영상·웹툰·음원을 무단으로 제공하는 사이트',
+  '국내법상 허용되지 않은 도박·사행성 서비스',
+  '성인 콘텐츠를 주목적으로 하는 사이트',
+  '악성코드 유포, 강제 리다이렉트, 과도한 팝업 광고가 확인된 사이트',
+  '접속 차단 우회를 주목적으로 하는 미러·우회 주소',
+  '운영 주체를 확인할 수 없는 사이트',
+];
+
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': `${SITE_NAME} 홈`, 'item': `${SITE_URL}/` },
+        { '@type': 'ListItem', 'position': 2, 'name': '사이트 선정 기준 및 정정 정책', 'item': canonicalURL }
+      ]
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${canonicalURL}#webpage`,
+      'url': canonicalURL,
+      'name': pageTitle,
+      'description': pageDesc,
+      'inLanguage': 'ko-KR',
+      'dateModified': DIRECTORY_UPDATED,
+      'isPartOf': { '@id': `${SITE_URL}/#website` },
+      'publisher': { '@id': `${SITE_URL}/#organization` }
+    }
+  ]
+};
+---
+<BaseLayout title={pageTitle} description={pageDesc} canonicalURL={canonicalURL} jsonLd={pageSchema}>
+  <RetentionBar />
+  <main class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8">
+    <nav aria-label="브레드크럼 내비게이션" class="text-xs text-slate-500 flex items-center space-x-2">
+      <a href="/" class="hover:text-indigo-600 font-bold">🏠 {SITE_NAME} 홈</a>
+      <span>/</span>
+      <span class="text-slate-900 font-extrabold">사이트 선정 기준</span>
+    </nav>
+
+    <article class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-10">
+      <header class="border-b border-slate-200 pb-6 space-y-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Editorial Policy · 최종 업데이트 {DIRECTORY_UPDATED}</span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">사이트 선정 기준 및 정정 정책</h1>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">{pageDesc}</p>
+      </header>
+
+      <section aria-labelledby="h-criteria" class="space-y-4">
+        <h2 id="h-criteria" class="text-base sm:text-xl font-extrabold text-slate-900 border-l-4 border-indigo-600 pl-3">선정 기준 6가지</h2>
+        <ol class="space-y-3">
+          {criteria.map((c, idx) => (
+            <li class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <h3 class="text-sm font-extrabold text-slate-900">{idx + 1}. {c.title}</h3>
+              <p class="mt-1.5 text-xs sm:text-sm text-slate-700 leading-7">{c.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section aria-labelledby="h-excluded" class="space-y-4">
+        <h2 id="h-excluded" class="text-base sm:text-xl font-extrabold text-slate-900 border-l-4 border-indigo-600 pl-3">등재하지 않는 사이트</h2>
+        <ul class="space-y-2">
+          {excluded.map((e) => (
+            <li class="flex gap-2 text-xs sm:text-sm text-slate-700"><span class="text-rose-600 font-extrabold shrink-0">✕</span><span>{e}</span></li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="h-correction" class="space-y-3">
+        <h2 id="h-correction" class="text-base sm:text-xl font-extrabold text-slate-900 border-l-4 border-indigo-600 pl-3">정정 절차</h2>
+        <p class="text-xs sm:text-sm text-slate-700 leading-7">
+          주소 변경, 잘못된 이용 조건, 서비스 종료를 발견하면 <a href="/contact/" class="text-indigo-700 font-bold underline">문의 페이지</a>나 이메일(<a href={`mailto:${CONTACT_EMAIL}`} class="text-indigo-700 font-bold underline">{CONTACT_EMAIL}</a>)로 알려 주세요. {EDITOR_NAME}이 운영사 공식 출처를 확인한 뒤 수정하고, 확인되지 않는 제보는 반영하지 않습니다.
+        </p>
+      </section>
+
+      <section aria-labelledby="h-ads" class="space-y-3">
+        <h2 id="h-ads" class="text-base sm:text-xl font-extrabold text-slate-900 border-l-4 border-indigo-600 pl-3">광고·제휴 정책</h2>
+        <p class="text-xs sm:text-sm text-slate-700 leading-7">
+          {SITE_NAME}는 금전이나 대가를 받고 사이트를 등재하거나 순서를 바꾸지 않습니다. 앞으로 광고나 제휴 링크를 운영하게 되면 해당 링크에 광고임을 명확히 표시하고 이 페이지에 정책을 공개합니다.
+        </p>
+      </section>
+    </article>
+  </main>
+  <FaqSection hideFaq={true} />
+</BaseLayout>
