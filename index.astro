@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RetentionBar from '../../components/RetentionBar.astro';
+import FaqSection from '../../components/FaqSection.astro';
+import { INITIAL_BLOG_POSTS } from '../../data/blogPosts';
+
+const pageTitle = '디지털 안전 칼럼 — 사칭·피싱 예방 가이드 | 웹사이트가이드';
+const pageDesc = '가짜 사칭 쇼핑몰 구별법, 프로스포츠 공식 중계 확인법, OTT·생성형 AI 구독 비교, 정부24·홈택스 스미싱 예방, 클라우드플레어 보안 DNS(DoH) 설정 등 2,000자 심층 디지털 안전 칼럼 모음입니다.';
+const canonicalURL = 'https://www.websiteguide.io/blog/';
+
+const blogHubSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "웹사이트가이드 홈",
+          "item": "https://www.websiteguide.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "디지털 안전 가이드 블로그 (BLOG)",
+          "item": canonicalURL
+        }
+      ]
+    },
+    {
+      "@type": "Blog",
+      "@id": "https://www.websiteguide.io/blog/#blog",
+      "url": canonicalURL,
+      "name": pageTitle,
+      "description": pageDesc,
+      "inLanguage": "ko-KR",
+      "publisher": {
+        "@type": "Organization",
+        "name": "웹사이트가이드 편집팀",
+        "url": "https://www.websiteguide.io/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.websiteguide.io/icon-512.png"
+        }
+      },
+      "blogPost": INITIAL_BLOG_POSTS.map((post) => ({
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.summary,
+        "datePublished": post.date,
+        "dateModified": post.updatedDate || post.date,
+        "url": `https://www.websiteguide.io/blog/${post.slug}/`,
+        "keywords": post.seoKeywords.join(', ')
+      }))
+    }
+  ]
+};
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  canonicalURL={canonicalURL}
+  jsonLd={blogHubSchema}
+>
+  <RetentionBar />
+
+  <main class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="브레드크럼 내비게이션" class="text-xs text-slate-500 flex items-center space-x-2">
+      <a href="/" class="hover:text-indigo-600 font-bold">🏠 웹사이트가이드 홈</a>
+      <span>/</span>
+      <span class="text-slate-900 font-extrabold">디지털 안전 가이드 블로그 (BLOG)</span>
+    </nav>
+
+    <!-- Blog Hub Header -->
+    <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-lg space-y-3">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-extrabold">
+        <span>🛡️</span>
+        <span>WebsiteGuide E-E-A-T Editorial Hub · 2,000자 심층 칼럼 아카이브</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+        안전한 인터넷 이용 및 공식 사이트 구별 가이드 블로그
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
+        {pageDesc}
+      </p>
+    </header>
+
+    <!-- All Blog Posts List -->
+    <section aria-label="전체 칼럼 목록" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {INITIAL_BLOG_POSTS.map((post, idx) => (
+        <article class="bg-white rounded-3xl border border-slate-200 p-6 shadow-2xs hover:shadow-md hover:border-indigo-300 transition-all flex flex-col justify-between space-y-5">
+          <div class="space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 font-extrabold rounded-md">
+                  Column #{idx + 1} · {post.category}
+                </span>
+                <span class="text-emerald-700 font-bold">📖 {post.readingTime} ({post.charCount.toLocaleString()}자)</span>
+              </div>
+              <time datetime={post.date} class="font-mono text-slate-400 font-semibold">{post.date}</time>
+            </div>
+
+            <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">
+              <a href={`/blog/${post.slug}/`} class="hover:text-indigo-600 transition-colors">
+                {post.title}
+              </a>
+            </h2>
+
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              {post.summary}
+            </p>
+
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-600 leading-relaxed">
+              <strong class="text-slate-800 block mb-1">핵심 요약:</strong>
+              {post.content}
+            </div>
+
+            <!-- Section Headings Preview -->
+            <div class="space-y-1 pt-1">
+              <div class="text-[11px] font-bold text-slate-500">수록 목차:</div>
+              <ul class="text-xs text-slate-600 space-y-1">
+                {post.sections.map((sec) => (
+                  <li class="truncate">• {sec.heading}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 pt-2">
+              {post.seoKeywords.map((kw) => (
+                <span class="text-[11px] px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-full font-medium">
+                  #{kw}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <a
+              href={`/category/${post.targetCategorySlug}/`}
+              class="text-xs font-bold text-indigo-600 hover:text-indigo-800 underline"
+            >
+              📂 {post.targetCategoryName} 바로가기
+            </a>
+            <a
+              href={`/blog/${post.slug}/`}
+              class="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors"
+            >
+              <span>칼럼 전문 읽기</span>
+              <span>→</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </section>
+  </main>
+
+  <FaqSection hideFaq={true} />
+</BaseLayout>

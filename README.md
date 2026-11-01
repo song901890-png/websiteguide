@@ -1,7 +1,7 @@
 # 웹사이트가이드 (WebsiteGuide) — Astro + Tailwind 정적 사이트
 
 메인 도메인: **https://www.websiteguide.io**
-도메인·브랜드·연락처는 `src/data/siteConfig.ts` 한 곳에서 관리합니다. (`astro.config.mjs`의 `SITE`도 함께 수정)
+도메인·브랜드·연락처는 `src/data/siteConfig.ts` 한 곳에서 관리합니다. (`astro.config.mjs`의 `site`도 함께 수정)
 
 ## v11 변경 사항
 
@@ -28,7 +28,9 @@
 
 ### 기술
 - `/rss.xml`을 `src/pages/rss.xml.ts`가 빌드할 때마다 자동 생성합니다 (추가 패키지 없음).
-- 사이트맵 `lastmod`를 페이지별 날짜로 출력합니다. 블로그는 `updatedDate`를 자동으로 읽고, 나머지는 `astro.config.mjs`의 `PAGE_LASTMOD`를 수정하면 됩니다.
+- 사이트맵(`/sitemap-index.xml`, `/sitemap-0.xml`)을 `src/pages/sitemap-*.xml.ts`가 직접 생성합니다. `@astrojs/sitemap` 최신판이 Astro 5 전용이라 Astro 4 빌드가 실패하던 문제를 없앴습니다(v14).
+- 페이지별 `lastmod`: 블로그는 `updatedDate`를 자동으로 읽고, 나머지 페이지는 `src/data/lastmod.ts`에서 관리합니다. 새 페이지를 만들면 이 파일에도 추가하세요.
+- 패키지 버전을 고정했습니다: astro 4.16.19, @astrojs/tailwind 5.1.5, tailwindcss 3.4.17.
 - Pretendard 폰트를 렌더링을 막지 않는 방식으로 불러옵니다.
 - `SearchAction`(구글 사이트링크 검색창, 2024년 종료) 스키마를 삭제했습니다.
 - OG 이미지 교체(`og-image.png`), IoT 전용 OG 이미지(`og-iot.png`), IoT 구조도(`/images/iot-architecture.svg`)를 추가했습니다.

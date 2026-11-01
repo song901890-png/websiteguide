@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RetentionBar from '../components/RetentionBar.astro';
+import FaqSection from '../components/FaqSection.astro';
+import { FAQ_ITEMS } from '../data/sitesData';
+
+const pageTitle = '자주 묻는 질문 (FAQ) | 웹사이트가이드';
+const pageDesc = '사이트가 갑자기 접속되지 않을 때 대처법, 사칭 사이트 구별법, 사이트 선정 기준, 개인 북마크 저장 방식, 정보 정정 요청 방법 등 자주 묻는 질문 8가지를 정리했습니다.';
+const canonicalURL = 'https://www.websiteguide.io/faq/';
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "웹사이트가이드 홈",
+          "item": "https://www.websiteguide.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "자주 묻는 질문 (FAQ)",
+          "item": canonicalURL
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonicalURL}#faq`,
+      "mainEntity": FAQ_ITEMS.map((item) => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer
+        }
+      }))
+    }
+  ]
+};
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDesc}
+  canonicalURL={canonicalURL}
+  jsonLd={faqSchema}
+>
+  <RetentionBar />
+  <main class="pt-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 space-y-4">
+      <nav aria-label="브레드크럼 내비게이션" class="text-xs text-slate-500 flex items-center space-x-2">
+        <a href="/" class="hover:text-indigo-600 font-bold">🏠 웹사이트가이드 홈</a>
+        <span>/</span>
+        <span class="text-slate-900 font-extrabold">자주 묻는 질문 (FAQ)</span>
+      </nav>
+      <header class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Help Center</span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+          웹사이트가이드 자주 묻는 질문
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          {pageDesc}
+        </p>
+      </header>
+    </div>
+    <FaqSection />
+  </main>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.faq-toggle-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const panelId = btn.getAttribute('data-faq-btn');
+          const panel = panelId ? document.getElementById(panelId) : null;
+          const arrow = btn.querySelector('.faq-arrow');
+          if (!panel) return;
+          const isHidden = panel.classList.contains('hidden');
+          panel.classList.toggle('hidden', !isHidden);
+          btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+          if (arrow) arrow.textContent = isHidden ? '▲' : '▼';
+        });
+      });
+    });
+  </script>
+</BaseLayout>

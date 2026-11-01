@@ -1,0 +1,15 @@
+# Cloudflare Pages Edge Redirects 
+/category/portal /category/search/ 301
+/category/portal/ /category/search/ 301
+/category/ai /category/ai-tools/ 301
+/category/ai/ /category/ai-tools/ 301
+/sitemap.xml /sitemap-index.xml 301
+/feed /rss.xml 301
+/rss /rss.xml 301
+
+# websiteguide.io 아카이브 슬러그 복원 (대소문자·확장자 변형 흡수)
+/internet-of-things /internet-of-things/ 301
+/internet-of-things/index.html /internet-of-things/ 301
+/Internet-of-Things/ /internet-of-things/ 301
+/iot /internet-of-things/ 301
+/iot/ /internet-of-things/ 301

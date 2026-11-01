@@ -1,0 +1,5 @@
+# 웹사이트가이드 (WebsiteGuide) robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://www.websiteguide.io/sitemap-index.xml

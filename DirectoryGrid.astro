@@ -1,0 +1,121 @@
+---
+// 홈 디렉터리: 분야 탭마다 대표 6곳만 보여 주고, 분야 전체(30곳)는 카테고리 페이지로 연결합니다.
+// 검색은 360곳 전체를 담은 경량 인덱스(JSON)로 동작하므로 홈 HTML이 길어지지 않습니다.
+import { CATEGORIES, SITES_DATA } from '../data/sitesData';
+
+const PREVIEW_PER_CATEGORY = 6;
+const categories = CATEGORIES.filter((c) => c.id !== 'all');
+const sitesByCategory = categories.map((cat) => {
+  const all = SITES_DATA.filter((s) => s.category === cat.id);
+  return { cat, total: all.length, preview: all.slice(0, PREVIEW_PER_CATEGORY) };
+});
+
+// 검색용 경량 인덱스 (이름·초성·도메인·태그만)
+const searchIndex = SITES_DATA.map((s) => ({
+  n: s.name,
+  c: s.category,
+  l: s.categoryLabel,
+  s: s.chosung,
+  d: s.domain,
+  u: s.url,
+  o: s.operator,
+  t: s.tags.join(' '),
+  x: s.description,
+}));
+const categorySlugs = Object.fromEntries(categories.map((c) => [c.id, c.slug]));
+---
+<section id="section-directory" aria-labelledby="heading-directory" class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-slate-200">
+    <div>
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">12개 분야 × 30곳</span>
+      <h2 id="heading-directory" class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
+        분야별 공식 웹사이트 디렉터리
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+        분야를 고르면 대표 사이트 {PREVIEW_PER_CATEGORY}곳을 보여 드립니다. 분야별 30곳 전체와 운영 주체·비용·가입 조건은 <strong>[전체 보기]</strong>에서 확인하세요. 위 검색창에서는 {SITES_DATA.length}곳 전체를 찾을 수 있습니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- 분야 탭 -->
+  <div role="tablist" aria-label="분야 선택" class="mt-5 flex items-center gap-2 overflow-x-auto pb-2" id="category-filter-bar">
+    {categories.map((cat, idx) => (
+      <button
+        type="button"
+        role="tab"
+        id={`tab-${cat.id}`}
+        aria-controls={`panel-${cat.id}`}
+        aria-selected={idx === 0 ? 'true' : 'false'}
+        data-category={cat.id}
+        class={`cat-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 border ${
+          idx === 0
+            ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+        }`}
+      >
+        <span>{cat.icon}</span>
+        <span>{cat.name}</span>
+      </button>
+    ))}
+  </div>
+
+  <!-- 분야별 패널 (대표 6곳) -->
+  <div id="directory-panels" class="mt-5">
+    {sitesByCategory.map(({ cat, total, preview }, idx) => (
+      <div
+        role="tabpanel"
+        id={`panel-${cat.id}`}
+        aria-labelledby={`tab-${cat.id}`}
+        data-panel={cat.id}
+        class={`directory-panel ${idx === 0 ? '' : 'hidden'}`}
+      >
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {preview.map((site) => (
+            <article class="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs hover:shadow-md hover:border-indigo-300 transition-all flex flex-col justify-between gap-3">
+              <div>
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0">
+                    <h3 class="text-sm sm:text-base font-extrabold text-slate-900 truncate">
+                      <a href={site.url} target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 transition-colors">{site.name}</a>
+                    </h3>
+                    <p class="text-[11px] text-slate-400 font-medium mt-0.5 truncate">{site.operator}</p>
+                  </div>
+                  <button
+                    type="button"
+                    data-bookmark-toggle={site.name}
+                    aria-label={`${site.name} 즐겨찾기 추가/해제`}
+                    class="bookmark-star-btn text-lg leading-none p-1 rounded hover:bg-slate-100 shrink-0"
+                  >☆</button>
+                </div>
+                <p class="mt-2 text-xs text-slate-600 leading-relaxed line-clamp-2">{site.description}</p>
+              </div>
+              <div class="flex items-center justify-between gap-2 text-xs">
+                <span class="font-mono text-[11px] font-bold text-emerald-700 truncate">{site.domain}</span>
+                <a href={site.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white font-bold transition-colors shrink-0">공식 사이트 ↗</a>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div class="mt-4 flex justify-center">
+          <a
+            href={`/category/${cat.slug}/`}
+            class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm transition-colors"
+          >
+            {cat.icon} {cat.name} {total}곳 전체 보기 →
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- 검색 결과 (검색어가 있을 때만 표시) -->
+  <div id="directory-search-results" class="hidden mt-5" aria-live="polite">
+    <p id="search-result-summary" class="text-xs font-semibold text-slate-600 mb-3"></p>
+    <div id="search-result-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+    <div class="mt-4 flex justify-center">
+      <button type="button" id="btn-search-more" class="hidden px-5 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs">결과 더 보기</button>
+    </div>
+  </div>
+
+  <script type="application/json" id="site-search-index" set:html={JSON.stringify({ sites: searchIndex, slugs: categorySlugs })} />
+</section>

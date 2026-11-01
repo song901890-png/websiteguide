@@ -1,0 +1,366 @@
+---
+// /internet-of-things/ — websiteguide.io 아카이브 슬러그 복원 페이지 (TechArticle)
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RetentionBar from '../components/RetentionBar.astro';
+import FaqSection from '../components/FaqSection.astro';
+import {
+  IOT_META,
+  IOT_INTRO_SECTIONS,
+  IOT_LAYERS,
+  IOT_CONNECTIVITY,
+  IOT_PROTOCOLS,
+  IOT_EDGE_SECTION,
+  IOT_SECURITY_SECTION,
+  IOT_CHECKLIST,
+  IOT_USE_CASES,
+  IOT_GLOSSARY,
+  IOT_FAQ,
+  IOT_REFERENCES,
+} from '../data/iotGuide';
+
+import { SITE_URL as SITE } from '../data/siteConfig';
+const canonicalURL = `${SITE}/${IOT_META.slug}/`;
+
+const toc = [
+  { id: 'what-is-iot', label: '사물인터넷(IoT)이란 무엇인가' },
+  { id: 'iot-architecture', label: 'IoT 4계층 아키텍처' },
+  { id: 'iot-connectivity', label: '무선 통신 기술 비교' },
+  { id: 'iot-protocols', label: '애플리케이션 메시징 프로토콜' },
+  { id: 'edge-vs-cloud', label: '엣지 컴퓨팅과 클라우드' },
+  { id: 'iot-security', label: '보안 위협과 인증·규제 동향' },
+  { id: 'iot-checklist', label: '가정용 IoT 보안 체크리스트' },
+  { id: 'iot-use-cases', label: '산업별 활용 사례' },
+  { id: 'iot-glossary', label: '핵심 용어 사전' },
+  { id: 'iot-faq', label: '자주 묻는 질문' },
+];
+
+const techArticleSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${canonicalURL}#breadcrumb`,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "웹사이트가이드 홈", "item": `${SITE}/` },
+        { "@type": "ListItem", "position": 2, "name": "사물인터넷(IoT) 기술 가이드", "item": canonicalURL }
+      ]
+    },
+    {
+      "@type": "TechArticle",
+      "@id": `${canonicalURL}#article`,
+      "headline": IOT_META.h1,
+      "alternativeHeadline": "Internet of Things (IoT) Technology Overview & Infrastructure Guide",
+      "description": IOT_META.description,
+      "url": canonicalURL,
+      "image": [`${SITE}/og-iot.png`, `${SITE}/images/iot-architecture.svg`],
+      "inLanguage": "ko-KR",
+      "datePublished": IOT_META.datePublished,
+      "dateModified": IOT_META.dateModified,
+      "proficiencyLevel": "Beginner",
+      "dependencies": "기본 네트워크(TCP/IP) 개념",
+      "articleSection": "기술 가이드",
+      "keywords": IOT_META.keywords.join(', '),
+      "about": [
+        {
+          "@type": "Thing",
+          "name": "Internet of Things",
+          "sameAs": [
+            "https://en.wikipedia.org/wiki/Internet_of_things",
+            "https://ko.wikipedia.org/wiki/사물인터넷"
+          ]
+        }
+      ],
+      "mentions": [
+        { "@type": "Thing", "name": "MQTT", "sameAs": "https://en.wikipedia.org/wiki/MQTT" },
+        { "@type": "Thing", "name": "Constrained Application Protocol", "sameAs": "https://en.wikipedia.org/wiki/Constrained_Application_Protocol" },
+        { "@type": "Thing", "name": "LoRaWAN", "sameAs": "https://en.wikipedia.org/wiki/LoRa" },
+        { "@type": "Thing", "name": "Edge computing", "sameAs": "https://en.wikipedia.org/wiki/Edge_computing" }
+      ],
+      "citation": IOT_REFERENCES.map((r) => ({ "@type": "CreativeWork", "name": r.name, "url": r.url })),
+      "hasPart": toc.map((t) => ({
+        "@type": "WebPageElement",
+        "name": t.label,
+        "url": `${canonicalURL}#${t.id}`
+      })),
+      "author": {
+        "@type": "Organization",
+        "name": "웹사이트가이드 편집팀",
+        "url": `${SITE}/`
+      },
+      "publisher": { "@id": `${SITE}/#organization` },
+      "isPartOf": { "@id": `${SITE}/#website` },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalURL },
+      "breadcrumb": { "@id": `${canonicalURL}#breadcrumb` }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonicalURL}#faq`,
+      "mainEntity": IOT_FAQ.map((f) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+      }))
+    }
+  ]
+};
+
+const h2Class = 'text-base sm:text-xl font-extrabold text-slate-900 border-l-4 border-indigo-600 pl-3';
+const pClass = 'text-xs sm:text-sm text-slate-700 leading-7';
+---
+<BaseLayout
+  title={IOT_META.title}
+  description={IOT_META.description}
+  canonicalURL={canonicalURL}
+  ogType="article"
+  publishedTime={IOT_META.datePublished}
+  modifiedTime={IOT_META.dateModified}
+  articleSection="기술 가이드"
+  ogImage={`${SITE}/og-iot.png`}
+  ogImageAlt="사물인터넷(IoT) 기술 가이드 — 구조, 통신 프로토콜, 보안 인프라"
+  keywords={IOT_META.keywords}
+  jsonLd={techArticleSchema}
+>
+  <RetentionBar />
+
+  <main class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8">
+    <nav aria-label="브레드크럼 내비게이션" class="text-xs text-slate-500 flex flex-wrap items-center gap-2">
+      <a href="/" class="hover:text-indigo-600 font-bold">🏠 웹사이트가이드 홈</a>
+      <span>/</span>
+      <span class="text-slate-800 font-bold">사물인터넷(IoT) 기술 가이드</span>
+    </nav>
+
+    <article class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-10">
+      <header class="border-b border-slate-200 pb-6 space-y-3">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 font-extrabold rounded-md">기술 가이드 · Archive</span>
+          <span class="text-slate-400">|</span>
+          <time datetime={IOT_META.dateModified} class="font-mono text-slate-500 font-semibold">최종 업데이트: {IOT_META.dateModified}</time>
+          <span class="text-slate-400">|</span>
+          <span class="text-emerald-700 font-bold">📖 {IOT_META.readingTime}</span>
+        </div>
+        <span class="block text-xs font-bold uppercase tracking-wider text-indigo-600">Internet of Things · Technology Overview &amp; Infrastructure</span>
+        <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+          {IOT_META.h1}
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          {IOT_META.description}
+        </p>
+      </header>
+
+      <div class="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 border border-indigo-200 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        <p>
+          💡 <strong>한 줄 요약:</strong> IoT는 <strong>센서가 달린 기기 → 무선 네트워크 → 엣지·클라우드 플랫폼 → 애플리케이션</strong>으로 이어지는 4계층 인프라이며,
+          설계의 핵심은 <strong>통신 방식 선택</strong>과 <strong>기기 단위 보안</strong>입니다.
+        </p>
+      </div>
+
+      <nav aria-label="가이드 목차" class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs space-y-2">
+        <div class="font-extrabold text-slate-900">📑 가이드 목차</div>
+        <ol class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-slate-600 list-decimal list-inside">
+          {toc.map((t) => (
+            <li><a href={`#${t.id}`} class="hover:text-indigo-600 hover:underline font-medium">{t.label}</a></li>
+          ))}
+        </ol>
+      </nav>
+
+      <div class="space-y-10">
+        {IOT_INTRO_SECTIONS.map((sec) => (
+          <section id={sec.id} aria-labelledby={`h-${sec.id}`} class="space-y-3 scroll-mt-20">
+            <h2 id={`h-${sec.id}`} class={h2Class}>{sec.heading}</h2>
+            {sec.paragraphs.map((p) => <p class={pClass}>{p}</p>)}
+          </section>
+        ))}
+
+        <section id="iot-architecture" aria-labelledby="h-iot-architecture" class="space-y-4 scroll-mt-20">
+          <h2 id="h-iot-architecture" class={h2Class}>IoT 4계층 아키텍처 (Device → Network → Platform → Application)</h2>
+          <p class={pClass}>
+            IoT 시스템은 일반적으로 아래 4개 계층으로 나누어 설계합니다. 각 계층은 독립적으로 교체·확장할 수 있어야 하며, 보안은 특정 계층이 아니라 모든 계층에 걸쳐 적용되어야 합니다.
+          </p>
+          <figure class="space-y-2">
+            <img
+              src="/images/iot-architecture.svg"
+              width="960"
+              height="520"
+              loading="lazy"
+              decoding="async"
+              alt="IoT 4계층 아키텍처 구조도: 디바이스 계층에서 네트워크 계층, 엣지·플랫폼 계층을 거쳐 애플리케이션 계층으로 데이터가 올라가며 보안은 모든 계층에 적용된다"
+              class="w-full h-auto rounded-2xl border border-slate-200"
+            />
+            <figcaption class="text-[11px] text-slate-500 text-center">그림 1. IoT 4계층 아키텍처와 계층 공통 보안 요소</figcaption>
+          </figure>
+          <ol class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {IOT_LAYERS.map((layer) => (
+              <li class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-indigo-600 text-white text-[11px] font-extrabold">{layer.no}</span>
+                  <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">{layer.name}</h3>
+                </div>
+                <p class="text-[11px] font-mono text-indigo-700">{layer.en}</p>
+                <p class="text-[11px] sm:text-xs text-slate-700 leading-relaxed">{layer.role}</p>
+                <p class="text-[11px] text-slate-500"><strong class="text-slate-700">예시:</strong> {layer.examples}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section id="iot-connectivity" aria-labelledby="h-iot-connectivity" class="space-y-4 scroll-mt-20">
+          <h2 id="h-iot-connectivity" class={h2Class}>IoT 무선 통신 기술 비교: Wi-Fi·BLE·Thread·LoRaWAN·NB-IoT·5G</h2>
+          <p class={pClass}>
+            통신 방식은 “얼마나 멀리, 얼마나 자주, 얼마나 많은 데이터를, 어떤 전원으로” 보내야 하는지에 따라 결정됩니다. 배터리로 수년간 동작해야 하는 원격 센서라면 LPWAN이, 영상을 보내는 카메라라면 Wi-Fi나 5G가 적합합니다.
+          </p>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="min-w-full text-[11px] sm:text-xs text-left">
+              <caption class="sr-only">IoT 무선 통신 기술별 전송 거리, 전력 소모, 대역폭, 주요 용도 비교표</caption>
+              <thead class="bg-slate-900 text-slate-100">
+                <tr>
+                  <th scope="col" class="px-3 py-2.5 font-bold">기술</th>
+                  <th scope="col" class="px-3 py-2.5 font-bold">전송 거리</th>
+                  <th scope="col" class="px-3 py-2.5 font-bold">전력 소모</th>
+                  <th scope="col" class="px-3 py-2.5 font-bold">대역폭</th>
+                  <th scope="col" class="px-3 py-2.5 font-bold">주요 용도</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 bg-white">
+                {IOT_CONNECTIVITY.map((row) => (
+                  <tr class="hover:bg-indigo-50/40">
+                    <th scope="row" class="px-3 py-2.5 font-extrabold text-slate-900 whitespace-nowrap">{row.tech}</th>
+                    <td class="px-3 py-2.5 text-slate-700 whitespace-nowrap">{row.range}</td>
+                    <td class="px-3 py-2.5 text-slate-700 whitespace-nowrap">{row.power}</td>
+                    <td class="px-3 py-2.5 text-slate-700">{row.bandwidth}</td>
+                    <td class="px-3 py-2.5 text-slate-600">{row.useCase}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p class="text-[11px] text-slate-500">※ 전송 거리·대역폭은 환경(장애물, 안테나, 주파수 규제)에 따라 크게 달라지는 대략적 범위입니다.</p>
+        </section>
+
+        <section id="iot-protocols" aria-labelledby="h-iot-protocols" class="space-y-4 scroll-mt-20">
+          <h2 id="h-iot-protocols" class={h2Class}>애플리케이션 메시징 프로토콜: MQTT·CoAP·HTTP·AMQP·LwM2M</h2>
+          <p class={pClass}>
+            무선 연결 위에서 실제 데이터를 어떤 형식과 규칙으로 주고받을지는 애플리케이션 프로토콜이 결정합니다. 대부분의 IoT 플랫폼은 MQTT를 기본으로 지원하며, 기기 특성에 따라 다른 프로토콜을 병행합니다.
+          </p>
+          <dl class="space-y-3">
+            {IOT_PROTOCOLS.map((p) => (
+              <div class="p-4 rounded-2xl border border-slate-200 space-y-1.5">
+                <dt class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-extrabold text-slate-900">{p.name}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold">{p.transport}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-semibold">{p.model}</span>
+                </dt>
+                <dd class="text-[11px] sm:text-xs text-slate-700 leading-relaxed">{p.summary}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        {[IOT_EDGE_SECTION, IOT_SECURITY_SECTION].map((sec) => (
+          <section id={sec.id} aria-labelledby={`h-${sec.id}`} class="space-y-4 scroll-mt-20">
+            <h2 id={`h-${sec.id}`} class={h2Class}>{sec.heading}</h2>
+            {sec.paragraphs.map((p) => <p class={pClass}>{p}</p>)}
+            {sec.bullets && (
+              <ul class="space-y-2">
+                {sec.bullets.map((b) => (
+                  <li class="flex gap-2 text-[11px] sm:text-xs text-slate-700 leading-relaxed">
+                    <span class="text-indigo-600 font-extrabold shrink-0">▸</span>
+                    <span><strong class="text-slate-900">{b.term}:</strong> {b.desc}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))}
+
+        <section id="iot-checklist" aria-labelledby="h-iot-checklist" class="space-y-4 scroll-mt-20">
+          <h2 id="h-iot-checklist" class={h2Class}>가정용 IoT 보안 체크리스트 7단계</h2>
+          <div class="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-200">
+            <ol class="space-y-2.5">
+              {IOT_CHECKLIST.map((item, idx) => (
+                <li class="flex gap-3 text-[11px] sm:text-xs text-slate-700 leading-relaxed">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold shrink-0">{idx + 1}</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <p class={pClass}>
+            제조사 앱이나 펌웨어 다운로드 페이지를 찾을 때는 검색 광고나 메신저 링크 대신 공식 도메인을 직접 확인하는 습관이 중요합니다. 공식 주소 확인 방법은
+            <a href="/address-verification/" class="text-indigo-700 font-bold underline hover:text-indigo-900">안전 접속 가이드</a>와
+            <a href="/selection-criteria/" class="text-indigo-700 font-bold underline hover:text-indigo-900">사이트 선정 기준</a>에서 참고하실 수 있습니다.
+          </p>
+        </section>
+
+        <section id="iot-use-cases" aria-labelledby="h-iot-use-cases" class="space-y-4 scroll-mt-20">
+          <h2 id="h-iot-use-cases" class={h2Class}>산업별 IoT 활용 사례</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {IOT_USE_CASES.map((u) => (
+              <article class="p-4 rounded-2xl border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all space-y-1.5">
+                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900">{u.icon} {u.title}</h3>
+                <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed">{u.desc}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="iot-glossary" aria-labelledby="h-iot-glossary" class="space-y-4 scroll-mt-20">
+          <h2 id="h-iot-glossary" class={h2Class}>IoT 핵심 용어 사전</h2>
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {IOT_GLOSSARY.map((g) => (
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                <dt class="text-xs font-extrabold text-slate-900">{g.term}</dt>
+                <dd class="text-[11px] text-slate-600 leading-relaxed mt-1">{g.desc}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section id="iot-faq" aria-labelledby="h-iot-faq" class="space-y-4 scroll-mt-20">
+          <h2 id="h-iot-faq" class={h2Class}>사물인터넷(IoT) 자주 묻는 질문</h2>
+          <div class="space-y-3">
+            {IOT_FAQ.map((f, idx) => (
+              <details class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs" open={idx === 0}>
+                <summary class="cursor-pointer list-none p-4 sm:p-5 font-bold text-slate-900 flex items-center justify-between gap-4 text-xs sm:text-sm hover:bg-slate-50 transition-colors">
+                  <h3 class="font-bold">Q{idx + 1}. {f.question}</h3>
+                  <span class="text-indigo-600 font-extrabold shrink-0 group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <p class="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">{f.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <section aria-labelledby="h-iot-refs" class="pt-4 border-t border-slate-100 space-y-2">
+        <h2 id="h-iot-refs" class="text-xs font-extrabold text-slate-900">📚 참고 표준 문서</h2>
+        <ul class="space-y-1 text-[11px] text-slate-600">
+          {IOT_REFERENCES.map((r) => (
+            <li>• <a href={r.url} rel="noopener" target="_blank" class="hover:text-indigo-600 underline">{r.name}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <div class="flex flex-wrap gap-1.5">
+        {IOT_META.keywords.map((kw) => (
+          <span class="text-[11px] px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-medium">#{kw}</span>
+        ))}
+      </div>
+
+      <footer class="p-5 sm:p-6 rounded-2xl bg-slate-900 text-slate-200 space-y-3">
+        <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Archive Guide · Related Resources</div>
+        <p class="text-xs sm:text-sm leading-relaxed">
+          이 가이드는 websiteguide.io의 기존 <span class="font-mono text-slate-300">/internet-of-things/</span> 아카이브 페이지를 같은 주소에 복원하고, 최신 표준과 보안 동향을 반영해 재작성한 문서입니다.
+          스마트홈 앱·공유기 관리 페이지 접속 시 사칭 사이트를 피하는 방법은 디지털 안전 칼럼에서 함께 확인하세요.
+        </p>
+        <div class="pt-2 flex flex-wrap gap-2">
+          <a href="/blog/dns-connection-error-cloudflare-doh-setup-guide/" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors">🌐 DNS·DoH 보안 설정 가이드 →</a>
+          <a href="/category/ai-tools/" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-colors">🤖 AI 도구 디렉터리</a>
+          <a href="/blog/" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-colors">📚 디지털 안전 칼럼</a>
+          <a href="/" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-colors">🏠 웹사이트가이드 홈</a>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <FaqSection hideFaq={true} />
+</BaseLayout>
