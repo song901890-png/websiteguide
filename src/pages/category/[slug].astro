@@ -20,7 +20,7 @@ const relatedPosts = INITIAL_BLOG_POSTS.filter(
   (p) => p.targetCategorySlug === category.slug || p.targetCategoryId === category.id
 );
 const canonicalURL = `https://www.websiteguide.io/category/${category.slug}/`;
-const pageTitle = `${category.name} 공식 사이트 ${categorySites.length}곳 모음 — 주소·이용 조건 비교 | 웹사이트가이드`;
+const pageTitle = `${category.name} 주소모음 — 공식 사이트 ${categorySites.length}곳·이용 조건 비교 | 웹사이트가이드`;
 const pageDesc = `${category.name} 분야 대표 공식 웹사이트 ${categorySites.length}곳의 주소와 운영 주체, 가입·본인인증 조건, 비용 정보를 한눈에 비교하고 공식 사이트로 바로 이동하세요.`;
 
 const categorySchema = {
@@ -93,7 +93,7 @@ const categorySchema = {
         </span>
       </div>
       <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
-        {category.icon} {category.name} 공식 웹사이트 {categorySites.length}곳
+        {category.icon} {category.name} 공식 사이트 주소모음 ({categorySites.length}곳)
       </h1>
       <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-4xl">
         {pageDesc}

@@ -19,8 +19,8 @@ interface Props {
 }
 
 const {
-  title = `${SITE_NAME} | 분야별 공식 웹사이트 주소 360곳 모음`,
-  description = `검색·공공·금융·OTT·AI 도구 등 12개 분야 360곳 공식 웹사이트의 주소와 운영 주체, 비용·가입 조건을 한눈에 비교할 수 있는 ${SITE_NAME}입니다.`,
+  title = `주소모음 | 분야별 공식 사이트 주소 360곳 - ${SITE_NAME}`,
+  description = `검색·공공·금융·OTT·AI 도구 등 12개 분야 360곳을 정리한 공식 사이트 주소모음입니다. 운영 주체와 비용·가입 조건을 비교하고 사칭 사이트 대신 공식 주소로 바로 이동하세요.`,
   canonicalURL = `${SITE_URL}/`,
   ogType = 'website',
   ogImage = `${SITE_URL}/og-image.png`,
@@ -80,7 +80,7 @@ if (includeHomeSchemas) {
     {
       '@type': 'ItemList',
       '@id': `${SITE_URL}/#itemlist`,
-      'name': '분야별 공식 웹사이트 디렉터리 (12개 분야 360곳)',
+      'name': '분야별 공식 사이트 주소모음 (12개 분야 360곳)',
       'numberOfItems': SITES_DATA.length,
       'itemListElement': SITES_DATA.map((site, idx) => ({
         '@type': 'ListItem',
