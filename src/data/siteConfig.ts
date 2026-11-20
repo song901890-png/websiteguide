@@ -7,5 +7,9 @@ export const CONTACT_EMAIL = 'jusonara@gmail.com';
 export const TELEGRAM_HANDLE = '@done_011';
 export const TELEGRAM_URL = 'https://t.me/done_011';
 
-/** 디렉터리 데이터 최종 정리일 (화면 표기·사이트맵 lastmod에 사용) */
-export const DIRECTORY_UPDATED = '2026-11-01';
+/**
+ * 디렉터리(홈·카테고리 페이지) 최종 업데이트일.
+ * 사이트 목록·홈·카테고리 페이지 내용을 실제로 고쳤을 때만 바꾸세요.
+ * 상단 바, 카테고리 페이지 표기, 사이트맵 lastmod에 함께 쓰입니다.
+ */
+export const DIRECTORY_UPDATED = '2026-11-20';
